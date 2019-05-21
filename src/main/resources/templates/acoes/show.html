@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/material-layout}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+    <title>Show Ação</title>
+
+  </head>
+    <body>
+	    <section layout:fragment="pagetitle" >
+	    	<div class="row page-titles" style="padding: 0; margin-bottom: 15px;">
+				<div class="col-md-5 col-8 align-self-center">
+<br>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">DASHBOARD</a></li>
+						<li class="breadcrumb-item ">AÇÂO</li>
+						<li class="breadcrumb-item active">EXIBIR</li>
+					</ol>
+				</div>
+			</div>
+	    </section>
+        <section layout:fragment="content" >	
+        	<div class="col-md-10">	
+				<div class="card" >
+		        	<div class="card-block">
+		        		<div class="row">
+		        			<div class="col-md-12">
+		        				<a href="/acoes/" class="btn btn-sm btn-success"><i class="fas fa-arrow-left"></i> Voltar para listagem</a>
+		        				<a th:href="@{/acoes/} + ${acao.id} +'/editar'" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Editar</a>
+		        				<a th:href="@{/acoes/} + ${acao.id} +'/vincular-campanha'" class="btn btn-sm btn-primary"><i class="fas fa-calendar-week"></i> Vincular Campanha</a>
+		        				<a th:href="@{/acoes/} + ${acao.id} +'/vincular-colaborador'" class="btn btn-sm btn-info"><i class="fas fa-users"></i> Vincular Colaborador</a>
+		        			</div>
+		        			<br> <br>
+		        			<div class="table-responsive col-md-12">
+		        			<h3>Dados da Ação</h3>
+        					<table class="table table-sm">
+        						<tbody>
+        							<tr>
+        								<td><strong>#Código:</strong></td><td>[[${acao.id}]]</td>        								
+       								</tr>
+       								<tr>
+       									<td><strong>Ação:</strong></td><td>[[${acao.nome}]]</td>
+       								</tr>
+       								<tr>
+       									<td><strong>Descrição:</strong></td><td>[[${acao.descricao}]]</td>
+       								</tr>
+       								<tr>
+        								<td><strong>Adicionada em:</strong></td><td>[[${#calendars.format(acao.cadastro, 'dd/MM/yyyy')}]]</td>
+        							</tr>
+       								<tr>
+        								<td><strong>Data de Início:</strong></td><td>[[${#calendars.format(acao.inicio, 'dd/MM/yyyy')}]]</td>
+        							</tr>
+       								<tr>
+        								<td><strong>Data de Término:</strong></td><td>[[${#calendars.format(acao.fim, 'dd/MM/yyyy')}]]</td>
+        							</tr>
+        							<tr>
+        								<td><strong>Carga Horária:</strong></td><td>[[${acao.cargaHoraria}]]</td>
+        							</tr>
+        						</tbody>
+        					</table>
+        					<h3>Campanhas Vinculadas</h3>
+        					<table class="table table-sm">
+        						<tbody>
+        							<tr th:each="campanha : ${acao.campanhas}">
+        								<td><a th:href="@{/campanhas/}+${campanha.id}+'/show'">[[${campanha.nome}]]</a></td>
+        							</tr>
+        						</tbody>
+        					
+        					</table>
+        					
+        					<h3>Colaboradores Vinculados</h3>
+        					<table class="table table-sm">
+        						<tbody>
+        							<tr th:each="colaborador : ${acao.colaboradors}">
+        								<td><a th:href="@{/colaboradores/}+${colaborador.id}+'/show'">[[${colaborador.nome}]]</a></td>
+        							</tr>
+        						</tbody>
+        					
+        					</table>
+		        		</div>
+		        	</div>
+	        	</div>
+        	</div>
+        </section>
+    </body>
+</html>

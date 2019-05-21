@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+    <title>Centr</title>
+    <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/quasar-framework@^0.17.0/dist/umd/quasar.mat.min.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+     
+    </style>
+    
+  </head>
+  <body>
+    <div id="q-app">
+      <q-layout view="lHh Lpr fff">
+        <q-layout-header>
+          <q-toolbar
+          color="secondary" inverted
+          >
+            <q-btn flat round dense @click="drawerState = !drawerState" icon="fas fa-bars"></q-btn>
+
+            <q-toolbar-title>
+              Centro Alternativo de Cultura
+              <div slot="subtitle">Sistema de Gestão-v1.0.0</div>
+            </q-toolbar-title>
+          </q-toolbar>
+        </q-layout-header>
+
+        <q-layout-drawer
+          v-model="drawerState"
+          :content-class="$q.theme === 'mat' ? 'bg-teal' : null"
+          :width="250"
+        >
+          <q-list no-border link inset-delimiter>
+            <q-list-header class="text-white">MENU</q-list-header>
+
+            <q-item @click.native="launch('/dashboard')">
+              <q-item-side color="white" icon="fas fa-tachometer-alt"></q-item-side>
+              <q-item-main class="text-white" label="Dashboard" ></q-item-main>
+            </q-item>
+            
+
+            <q-item @click.native="launch('/acoes')">
+              <q-item-side color="white" icon="fa fa-tty"></q-item-side>
+              <q-item-main class="text-white" label="Ações" ></q-item-main>
+            </q-item>
+            
+            <q-item @click.native="launch('/campanhas')">
+              <q-item-side color="white" icon="fas fa-tasks"></q-item-side>
+              <q-item-main class="text-white" label="Campanhas" ></q-item-main>
+            </q-item>
+
+            <q-item @click.native="launch('/colaboradores')">
+              <q-item-side color="white" icon="fas fa-id-card"></q-item-side>
+              <q-item-main class="text-white" label="Colaboradores" ></q-item-main>
+            </q-item>
+
+            <q-item @click.native="launch('/doacoes')">
+              <q-item-side color="white" icon="fas fa-handshake  "></q-item-side>
+              <q-item-main class="text-white" label="Doações" ></q-item-main>
+            </q-item>
+            
+          </q-list>
+        </q-layout-drawer>
+</div>	
+	<!-- <q-layout layout:fragment="content">
+		
+		
+	</q-layout> -->
+	<div layout:fragment="content">
+		
+		
+	</div>
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/vue@latest/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar-framework@^0.17.0/dist/umd/quasar.mat.umd.min.js"></script>
+   <!--
+    <script src="https://cdn.jsdelivr.net/npm/quasar-framework@^0.17.0/dist/umd/i18n.pt_br.umd.min.js"></script>
+  -->
+    <script src="https://cdn.jsdelivr.net/npm/quasar-framework@^0.17.0/dist/umd/icons.fontawesome.umd.min.js"></script>
+    <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/http-vue-loader"></script>
+    
+    
+
+    <script>
+      Quasar.i18n.set(Quasar.i18n.pt_br)
+      Quasar.icons.set(Quasar.icons.fontawesome)
+      
+      	
+    	httpVueLoader.register(Vue, '/js/components/colaborador-list.vue');
+    	httpVueLoader.register(Vue, '/js/components/colaborador-create.vue');
+    	httpVueLoader.register(Vue, '/js/components/dash-board.vue');
+ 
+
+   		var app = new Vue({
+        el: '#q-app',
+        data: function () {
+          return {
+            version: Quasar.version,
+            separator: 'horizontal',
+            drawerState: true  
+            
+          }
+        },
+        methods: {
+          launch: function (url) {
+            //Quasar.utils.openURL(url)
+            window.location.href = url;
+          }
+        },
+        mounted() {
+            //productService.findAll(r => {this.tableData = r.data})
+          },
+        components: [ 
+            'colaborador-list',
+            'colaborador-create',
+            'dash-board'
+        ]
+      })
+       
+    </script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

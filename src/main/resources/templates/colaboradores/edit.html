@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/material-layout}">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="viewport"
+	content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+<title>Editar Colaborador:</title>
+
+</head>
+<body>
+	<section layout:fragment="pagetitle">
+		<div class="row page-titles" style="padding: 0; margin-bottom: 15px;">
+			<div class="col-md-5 col-8 align-self-center">
+				<br>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="javascript:void(0)">DASHBOARD</a></li>
+					<li class="breadcrumb-item ">COLABORADOR</li>
+					<li class="breadcrumb-item active">EDITAR</li>
+				</ol>
+			</div>
+		</div>
+	</section>
+	<section layout:fragment="content">
+		<div class="col-md-10">
+			<div class="card">
+				<div class="card-block">
+					<div class="row">
+						<div class="col-md-10">
+							<h3 class="card-title">Editar Colaborador</h3>
+						</div>
+						<div class="col-md-2">
+							<a style="color: #fff" class="btn btn-danger"
+								onclick="history.back()"><i class="fas fa-save"></i>
+								Cancelar</a>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<form class="form-material m-t-5 row"
+								th:action="@{/colaboradores/}+${colaborador.id}+'/salvar'"
+								th:object="${colaborador}" method="POST">
+								<input type="hidden" th:field="*{id}" />
+								<div class="form-group col-md-6 ">
+									<label>Nome</label> <input type="text"
+										class="form-control form-control-line" th:field="*{nome}">
+								</div>
+
+								<div class="form-group col-md-6 ">
+									<label>E-mail</label> <input type="email" id="example-email2"
+										name="example-email" class="form-control" th:field="*{email}">
+								</div>
+
+								<div class="form-group col-md-4 ">
+									<label>Celular</label> <input type="text"
+										class="form-control form-control-line" th:field="*{celular}">
+								</div>
+
+								<div class="form-group col-md-4 ">
+									<label>Tipo de Colaborador</label> <select class="form-control"
+										th:field="*{tipoPessoa}">
+										<option th:value="''">---Selecione---</option>
+										<option
+											th:each="elem: ${T(br.org.cac.enums.TipoPessoaEnum).values()}"
+											th:value="${elem}" th:text="${elem.getDescricao()}"></option>
+									</select>
+								</div>
+
+								<div class="form-group col-md-6  ">
+									<label>Profissão</label> <input type="text"
+										class="form-control form-control-line" th:field="*{profissao}">
+								</div>
+								<div class="form-group col-md-6  ">
+									<label>Perfil</label> <input type="text"
+										class="form-control form-control-line" th:field="*{perfil}">
+								</div>
+
+								<div class="form-group col-md-4 ">
+									<label
+										th:text="${colaborador.tipoPessoa.getValor().equals('F')} ? 'CPF':'CNPJ'">CPF/CNPJ</label>
+									<input type="text" class="form-control" th:field="*{cpfOuCnpj}">
+								</div>
+
+								<div class="form-group col-md-10 ">
+									<label>Rua</label> <input type="text"
+										class="form-control form-control-line"
+										th:field="*{logradouro}">
+								</div>
+
+								<div class="form-group col-md-2 ">
+									<label>Número</label> <input type="text"
+										class="form-control form-control-line" th:field="*{numero}">
+								</div>
+
+								<div class="form-group col-md-6 ">
+									<label>Complemento</label> <input type="text"
+										class="form-control form-control-line"
+										th:field="*{complemento}">
+								</div>
+
+								<div class="form-group col-md-3 ">
+									<label>Bairro</label> <input type="text"
+										class="form-control form-control-line" th:field="*{bairro}">
+								</div>
+
+								<div class="form-group col-md-3 ">
+									<label>CEP</label> <input type="text"
+										class="form-control form-control-line" th:field="*{cep}">
+								</div>
+								<div class="col-md-12">
+									<button class="btn btn-success">
+										<i class="fas fa-save"></i> Salvar
+									</button>
+
+
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

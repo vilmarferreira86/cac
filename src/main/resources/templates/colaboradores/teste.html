@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout-quasar}">
+
+
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="viewport"
+	content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+<title>Novo Colaborador</title>
+
+
+</head>
+
+<body>
+	<section layout:fragment="content" id="pagecontent">
+		<table-data :dados="dados" :url="urlBase"></table-data>
+		<script th:inline="javascript">
+            var dados = [[${ colaboradores }]];
+            var urlBase = "/colaboradores/teste";
+            console.log(dados);
+        </script>
+	</section>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<body>
+    <section>
+        <select>
+            <option value="">-- Escolha a Permissão --</option>
+            <option th:each="state : ${T(br.ord.cac.enums.PermisionEnum).values()}" th:value="${state.getValor()}" th:text="${state.getDescricao()}+'  ['+${state.name()}+']'">
+            </option>
+        </select>
+    </section>
+</body>
+
+</html>

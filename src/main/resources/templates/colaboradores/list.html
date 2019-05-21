@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/material-layout}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+    <title>Lista de Colaboradores</title>
+
+  </head>
+    <body>
+	    <section layout:fragment="pagetitle" >
+	    	<div class="row page-titles" style="padding: 0; margin-bottom: 15px;">
+				<div class="col-md-5 col-8 align-self-center">
+<br>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">DASHBOARD</a></li>
+						<li class="breadcrumb-item ">COLABORADOR</li>
+						<li class="breadcrumb-item active">LISTAR</li>
+					</ol>
+				</div>
+			</div>
+	    </section>
+        <section layout:fragment="content" >	
+        	<div class="col-md-10">	
+				<div class="card" >
+		        	<div class="card-block">
+		        		<div class="row">
+			        				<div class="col-md-10">
+				        				<form action="/colaboradores/buscarpor" method="POST" class="form-horizontal form-material row">
+		                                    <div class="form-group col-md-4">
+			                                    <select th:value="${size}" name="size" title="Número de registros por página!" class="form-control form-control-line">
+			                                        <option 
+				                                        th:each="item : ${porPagina}" 
+				                                        th:value="${item.getValor()}" 
+				                                        th:text="${item.getDescricao()}"
+				                                        th:selected="${item.getValor()==size}">
+			                                        </option>
+			                                    </select>
+				                            </div>
+		                                    <div class="form-group col-md-7">
+		                                        <div>
+		                                            <input title="Você pode fazer buscas por Nome, Celular, E-mail ou Profissão para encontrar um Colaborador!" type="text" th:value="${busca}" name="busca" placeholder="Nome, Celular, E-mail ou Profissão" class="form-control form-control-line">
+		                                        </div>
+		                                    </div>    
+		                                    <div class="form-group col-md-1">
+		                                        <div>
+		                                            <button title="Aplicar Filtro" class="btn btn-success"><i class="fas fa-filter"></i></button>
+		                                        </div>
+		                                    </div>
+		                                </form>
+	                                </div>
+	                                <div class="col-md-1">
+		                                <form  action="/colaboradores/resetabusca" method="POST" class="form-horizontal form-material">
+		                                	<div>
+		                                    	<button title="Limpar Filtro" class="btn btn-danger"><i class="fas fa-eraser"></i></button>
+		                                   	</div>
+		                                </form>
+	                                </div>
+	                                <div class="col-md-1" style="padding-left: 0;">
+		                                <a title="Adicionar Colaborador" href="/colaboradores/novo" style="color: #fff; background: #00c853; border: 1px solid #00c853;" class="btn btn-info"><i class="fas fa-plus"></i></a>
+	                                </div>
+	                                
+		        		</div>
+		        		<div class="table-responsive">
+				        	<table class="table table-sm">
+				        		<thead>
+			        			<tr>
+			        				<th>Nome</th>
+			        				<th>Celular</th>
+			        				<th>E-mail</th>
+			        				<th></th>
+			        			</tr>
+			        		</thead>
+			        		<tbody>
+			        			<tr th:each="colaborador : ${colaboradores}">
+			        				<td th:text="${colaborador.nome}"></td>
+			        				<td th:text="${colaborador.celular}"></td>
+			        				<td th:text="${colaborador.email}"></td>
+			        				<td>
+				        				<div class="btn-group" role="group" aria-label="Basic example">
+				        					
+			        						<a th:href="@{/colaboradores/} + ${colaborador.id} +'/editar'" title="Editar Cadastro" class="btn btn-warning  btn-sm"><i class="fas fa-edit"></i></a>
+			        					
+				        					<a th:href="@{/colaboradores/} + ${colaborador.id} +'/show'" title="Ver Cadastro" class="btn btn-success  btn-sm"><i class="fas fa-eye"></i></a>
+			        					
+				        					<form method="POST" th:action="@{/colaboradores/delete}">
+				        						<input type="hidden" name="id" th:value="${colaborador.id}" />
+				        						<button title="Excluir" onclick="if (! confirm('Deseja excluir este registro?')) return false" class="btn btn-danger  btn-sm"><i class="fas fa-trash"></i></button>
+				        					</form>
+				        					
+				        					
+				        				</div>
+			        				</td>
+			        			</tr>
+			        		
+			        		</tbody>
+			        	</table>
+		        		</div>
+		        		<div class="row">
+		        			<div class="col-md-2 col-sm-4 col-4">
+			        			<form action="/colaboradores/anterior" method="POST">
+			        				<button th:disabled="${!page.hasPrevious()}" class="btn btn-light"><i class="fas fa-arrow-circle-left"></i> Anterior</button>
+			        			</form>
+		        			</div>
+		        			<div class="col-md-2 col-sm-4 col-4 text-center align-self-center">
+			        			<spam th:text="${page.getNumber()+1} +' / '+ ${page.getTotalPages()}" ></spam>
+		        			</div>
+		        			<div class="col-md-2 col-sm-4 col-4">
+			        			<form action="/colaboradores/proximo" method="POST">
+			        				<button th:disabled="${!page.hasNext()}" class="btn btn-light">Próximo <i class="fas fa-arrow-circle-right"></i></button>
+			        			</form>
+		        			</div>
+		        		</div>
+		        	</div>
+	        	</div>
+        	</div>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Index</title>
+    </head>
+
+    <body>
+        <select id="selection">
+            <option>Content 1</option>
+            <option>Content 2</option>
+        </select>
+
+        <div id="replace_div">
+            Content goes here
+        </div>
+
+        <div id="app">
+            <select v-model="select" @change="findAll">
+                <option>Content 1</option>
+                <option>Content 2</option>
+            </select>
+
+            <div v-html="conteudo">
+            </div>
+        </div>
+
+        <script th:src="@{/js/assets/vue.min.js}"></script>
+        <script th:src="@{/js/assets/axios.min.js}"></script>
+
+        <script>
+        var app = new Vue({
+        el: '#app',
+        data: function () {
+          return {
+            conteudo:"",
+            select:""  
+            
+          }
+        },
+        methods: {
+            launch: function (url) {
+                //Quasar.utils.openURL(url)
+                window.location.href = url;
+            },
+            findAll() {
+                var url = "/ajax/";
+                if(this.select == "Content 1"){
+
+                    axios
+                    .post(url+'content1')
+                    .then(response => {this.conteudo = response.data})
+                    .catch(error => console.log(error))
+                }
+                if(this.select == "Content 2"){
+                    axios
+                    .post(url+'content2')
+                    .then(response => {this.conteudo = response.data})
+                    .catch(error => console.log(error))
+                }
+
+            }
+        },
+        mounted() {
+            //productService.findAll(r => {this.tableData = r.data})
+        },
+        created() {
+        }
+      })
+    </script>
+        <!-- JQury from Google CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                //call function when page is loaded
+                getContent();
+
+                //set on change listener
+                $('#selection').change(getContent);
+
+                function getContent() {
+
+                    //create url to request fragment
+                    var url = "/ajax/";
+                    if ($('#selection').val() === "Content 1") {
+                        url = url + "content1";
+                    } else {
+                        url = url + "content2";
+                    }
+
+                    //load fragment and replace content
+                    $('#replace_div').load(url);
+                }
+            })
+        </script>
+    </body>
+</html>

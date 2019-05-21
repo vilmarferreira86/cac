@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="pt-br" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout-quasar}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+    <title>Novo Colaborador</title>
+    
+
+</head>
+
+<body>
+    <section layout:fragment="content" id="pagecontent">
+
+        <q-page-container >
+            <q-page padding>
+                <!-- <span th:text="${teste}">Teste</span> -->
+                <div class="q-table-container q-table-dense" >
+                    <div class="row justify-center">
+                        <div class="col-md-12 text-secondary q-display-1">{{ titlePage }}</div>
+                    </div>
+                    <div class="q-table-middle scroll">
+                        <table class="q-table q-table-horizontal-separator">
+                            <thead>
+                                <tr>
+                                    <th class="text-left sortable" style="width: 400px;">Nome<i aria-hidden="true"
+                                            class="q-icon q-table-sort-icon q-table-sort-icon-left fas fa-arrow-up">
+                                        </i>
+                                    </th>
+                                    <th class="text-left">Celular</th>
+                                    <th class="text-left sortable">E-mail<i aria-hidden="true" class="q-icon q-table-sort-icon q-table-sort-icon-left fas fa-arrow-up">
+                                        </i></th>
+                                    <th class="text-right">CPF/CNPJ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="" th:each="colaborador : ${colaboradores}">
+                                    <td class="text-left" style="width: 400px;">[[${colaborador.nome}]]</td>
+                                    <td class="text-left">[[${colaborador.celular}]]</td>
+                                    <td class="text-left">[[${colaborador.email}]]</td>
+                                    <td class="text-right">[[${colaborador.cpfOuCnpj}]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        
+                    </div>                    
+                
+                <div class="justify-center row">
+                    <button @click.native="goToFirst"></button>
+                            <div center class="q-pagination row no-wrap items-center">
+                                <a :href="firstPageUrl" :disabled="isDisabledFirst" tabindex="0" type="button" class="q-btn inline relative-position q-btn-item non-selectable q-btn-rectangle q-btn-flat q-focusable q-hoverable text-secondary">
+                                    <div class="q-focus-helper"></div>
+                                    <div class="q-btn-inner row col items-center q-popup--skip justify-center"><i aria-hidden="true" class="q-icon fas fa-step-backward">
+                                        </i></div>
+                                    </a>
+                                <a :href="previousPageUrl" :disabled="isDisabledFirst" tabindex="0" type="button" class="q-btn inline relative-position q-btn-item non-selectable q-btn-rectangle q-btn-flat q-focusable q-hoverable text-secondary">
+                                    <div class="q-focus-helper"></div>
+                                    <div class="q-btn-inner row col items-center q-popup--skip justify-center"><i aria-hidden="true" class="q-icon fas fa-chevron-left">
+                                        </i></div>
+                                    </a>
+                                <div class="row justify-center">
+                                    <div tabindex="-1" class="q-if row no-wrap relative-position q-input inline no-padding q-if-hide-underline q-if-standard q-if-has-content text-secondary"
+                                        style="width: 13rem;">
+                                        <div class="q-if-baseline">|</div>
+                                        <div class="q-if-inner col column q-popup--skip">
+                                            <div class="row no-wrap relative-position">
+                                                <input disabled type="text" :placeholder="page" step="any"
+                                                    class="col q-input-target q-no-input-spinner ellipsis">
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a :href="nextPageUrl"  :disabled="isDisabledLast" tabindex="0" type="button" class="q-btn inline relative-position q-btn-item non-selectable q-btn-rectangle q-btn-flat q-focusable q-hoverable text-secondary">
+                                    <div class="q-focus-helper"></div>
+                                    <div class="q-btn-inner row col items-center q-popup--skip justify-center">
+                                        <i aria-hidden="true" class="q-icon fas fa-chevron-right">
+                                        </i>
+                                    </div>
+                                </a>
+                                <a :disabled="isDisabledLast" :href="lastPageUrl" tabindex="0" type="button" class="q-btn inline relative-position q-btn-item non-selectable q-btn-rectangle q-btn-flat q-focusable q-hoverable text-secondary">
+                                    <div class="q-focus-helper"></div>
+                                    <div class="q-btn-inner row col items-center q-popup--skip justify-center">
+                                        <i aria-hidden="true" class="q-icon fas fa-step-forward">
+                                        </i>
+                                    </div>
+                                </a>
+                            </div>
+                            </div>
+                      </div>
+            </q-page>
+        </q-page-container>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@latest/dist/vue.min.js"></script>
+        <script th:inline="javascript">
+            var dados = [[${ colaboradores }]];
+            console.log(dados);
+            const urlBase = "/colaboradores/teste"
+        
+            var app2 = new Vue({
+                el: '#pagecontent',
+                data: function () {
+                    return {
+                        dados:[[${ colaboradores }]],
+                        titlePage: "Colaboradores",
+                        page:0,
+                        first:true,
+                        last:false,
+
+                    }
+                },
+                mounted() {
+                    this.page=(dados.pageable.pageNumber + 1)+" / "+dados.totalPages,
+                    this.first = dados.first,
+                    this.last = dados.last
+                    
+                },
+                computed:{
+                    isDisabledLast: function(){
+                        return this.last;
+                    },
+                    isDisabledFirst: function(){
+                        return this.first;
+                    },
+                    lastPageUrl: function () {
+                        return urlBase+"?page="+(dados.totalPages-1);
+                    },
+                    firstPageUrl: function () {
+                        return urlBase+"?page="+0;
+                    },
+                    previousPageUrl: function () {
+                        if(dados.number == 0){
+                            return urlBase+"?page=0";
+                        }
+                        return urlBase+"?page="+(dados.number-1);
+                    },
+                    nextPageUrl: function () {
+                        return urlBase+"?page="+(dados.number+1);
+                    }
+                },
+                methods: {
+                    // launch: function (url) {
+                    //     window.location.href = url;
+                    // },
+                    goToFirst: function(){
+                        console.log("chamou");
+                        //this.launch(urlBase+"?page="+0)
+                    },
+                    goToLast: function(){
+                        console.log("chamou");
+                        //this.launch(urlBase+"?page="+(dados.totalPages-1))
+                    }
+                },
+            })
+        </script>
+
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/material-layout}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+<!-- 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" /> -->
+	<link href="/css/material-select2.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js'></script>
+	<script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
+	
+    <title>Vincular Colaborador</title>
+
+  </head>
+    <body>
+	    <section layout:fragment="pagetitle" >
+	    	<div class="row page-titles" style="padding: 0; margin-bottom: 15px;">
+				<div class="col-md-5 col-8 align-self-center">
+<br>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:void(0)">DASHBOARD</a></li>
+						<li class="breadcrumb-item ">AÇÕES</li>
+						<li class="breadcrumb-item active">VINCULAR COLABORADOR</li>
+					</ol>
+				</div>
+			</div>
+	    </section>
+		<section layout:fragment="content">
+			<div class="col-md-10">
+				<div class="card">
+					<div class="card-block">					
+						<div class="row">
+							<div class="col-md-10">
+								<h3 class="card-title">Vincular Colaborador</h3>
+							</div>
+							<div class="col-md-2">							
+								<a style="color: #fff" class="btn btn-danger" onclick="history.back()"><i class="fas fa-save"></i> Cancelar</a>
+							</div>							
+						</div>	
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-material m-t-5 row" method="POST" th:object="${acao}">
+									<input type="hidden" th:field="*{id}"/>
+                                    <div class="form-group col-md-10 ">
+                                    	<label>Colaboradores</label>
+                                        <select multiple="multiple" class="js-data-example-ajax form-control" th:field="*{colaboradors}">
+                                        	
+                                        	<option 
+                                        		th:each="colaborador : ${colaboradores}"
+                                        		th:value="${{colaborador}}"
+												th:text="${colaborador.nome}"
+                                        	></option>
+                                        </select>
+                                    </div>                                    
+                                    <div class="col-md-12">
+                                    	<button class="btn btn-success"><i class="fas fa-save"></i> Salvar</button>                                    	
+                                    	
+                                    </div>
+                                </form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				$('.js-data-example-ajax').select2({
+					minimumInputLength: 2,
+					placeholder: 'Selecione um ou mais Colaboradores para vincular!'
+				});			
+			</script>
+		</section>
+</body>
+</html>
