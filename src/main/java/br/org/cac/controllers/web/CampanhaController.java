@@ -2,6 +2,7 @@ package br.org.cac.controllers.web;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.org.cac.enums.PorPaginaEnum;
 import br.org.cac.models.Acao;
@@ -33,16 +35,16 @@ import br.org.cac.repositories.ItemDoacaoRepository;
 public class CampanhaController {
 	@Autowired
 	private CampanhaRepository repository;
-	
+
 	@Autowired
 	private AcaoRepository acaoRepository;
-	
+
 	@Autowired
 	private ItemCampanhaRepository itemCampanhaRepository;
-	
+
 	@Autowired
 	private ItemDoacaoRepository itemDoacaoRepository;
-	
+
 	private Integer page = 0;
 	private Integer size = 0;
 	private List<Campanha> campanhaList;
@@ -51,10 +53,9 @@ public class CampanhaController {
 	private List<PorPaginaEnum> porPagina;
 	private Date dataInicial = null;
 	private Date dataFinal = null;
-	
-	
+
 	@GetMapping
-	public String list(Model model) {		
+	public String list(Model model) {
 		model.addAttribute("campanhas", getCampanhaList());
 		model.addAttribute("page", getCampanhaPage());
 		model.addAttribute("busca", getBusca());
@@ -62,51 +63,77 @@ public class CampanhaController {
 		model.addAttribute("size", getSize());
 		return "campanhas/list";
 	}
-	
+
 	@GetMapping("/{id}/show")
 	public String show(@PathVariable int id, Model model) {
-		if(repository.findById(id).isPresent()) {
-			model.addAttribute("campanha", repository.findById(id).get());				
+		if (repository.findById(id).isPresent()) {
+			model.addAttribute("campanha", repository.findById(id).get());
 			return "campanhas/show";
 		}
 		initList();
 		return "redirect:/campanhas";
 	}
-	
+
 	@GetMapping("/{id}/editar")
 	public String editar(@PathVariable int id, Model model) {
-		if(repository.findById(id).isPresent()) {
+		if (repository.findById(id).isPresent()) {
 			model.addAttribute("campanha", repository.findById(id).get());
-			model.addAttribute("acoes", acaoRepository.findAll());	
+			model.addAttribute("acoes", acaoRepository.findAll());
 			return "campanhas/edit";
 		}
 		initList();
 		return "redirect:/campanhas/";
 	}
-	
+
 	@PostMapping("/{id}/salvar")
-	public String salvar(
-			@PathVariable int id, 
-			@ModelAttribute @Valid Campanha campanha,
-			Model model) {
+	public String salvar(@PathVariable int id, @ModelAttribute @Valid Campanha campanha, Model model) {
 		Campanha _campanha = repository.findById(id).get();
-		if(_campanha != null && _campanha.getId() == campanha.getId()) {
-			try {				
+		if (_campanha != null && _campanha.getId() == campanha.getId()) {
+			try {
 				repository.saveAndFlush(campanha);
 			} catch (Exception e) {
-				System.out.println("Erro ao alterar Campanha: "+e.getMessage());
-			}				
-			return "redirect:/campanhas/"+id+"/show";
+				System.out.println("Erro ao alterar Campanha: " + e.getMessage());
+			}
+			return "redirect:/campanhas/" + id + "/show";
 		}
 		initList();
 		return "redirect:/campanhas/";
 	}
+
+	@PostMapping("/salvar")
+	public String salvarAlteracao(@ModelAttribute @Valid Campanha campanha, Model model) {
+		Campanha _campanha = null;
+		try {
+			_campanha = repository.saveAndFlush(campanha);
+		} catch (Exception e) {
+			System.out.println("Erro ao salvar Campanha: " + e.getMessage());
+		}
+		initList();
+		return "redirect:/campanhas/" + _campanha.getId() + "/show";
+	}
 	
+	@PostMapping("/delete")
+	public String delete(@RequestParam("id") int id) {
+		if(repository.findById(id).isPresent()) {
+			repository.deleteById(id);
+			initList();			
+		}
+		return "redirect:/campanhas/";
+	}
+	
+	@GetMapping("/{id}/vincular-itemcampanha")
+	public String vincularItemCampanha(@PathVariable int id, Model model) {
+		Campanha campanha = repository.findById(id).get();
+		model.addAttribute("campanha",campanha);
+	//	model.addAttribute("campanhas",campanhaRepository.findAll());
+		return"campanhas/vincular-itemcampanha";
+	}
+
 	/**
 	 * Comportamentos
 	 */
 	@PostConstruct
-	public void initList(){
+	public void initList() {
 		setSize(5);
 		Pageable pageable = PageRequest.of(page, size, new Sort(Direction.DESC, "id"));
 		setBusca("");
@@ -116,137 +143,120 @@ public class CampanhaController {
 		setCampanhaList(getCampanhaPage().getContent());
 	}
 
+	@GetMapping("/novo")
+	public String novo(Model model) {
+		model.addAttribute("campanha", new Campanha());
+		return "campanhas/create";
+	}
+	
+	
+	
+	@PostMapping("/proximo")
+	public String proximo() {
+		if(campanhaPage.hasNext()) {
+			campanhaPage = repository.findByNomeOrDescricaoContaining(getBusca(), getBusca(), campanhaPage.nextPageable());			
+			setCampanhaList(campanhaPage.getContent());
+		}		
+		return "redirect:/campanhas/";
+	}
+	
+	@PostMapping("/anterior")
+	public String anterior() {
+		if(campanhaPage.hasPrevious()) {
+			campanhaPage = repository.findByNomeOrDescricaoContaining(getBusca(), getBusca(), campanhaPage.previousPageable());
+			setCampanhaList(campanhaPage.getContent());
+		}		
+		return "redirect:/campanhas/";
+	}
+	
+	@PostMapping("/buscarpor")
+	public String buscarpor(
+			@RequestParam("busca") Optional<String> busca, 
+			@RequestParam("size") Optional<Integer> sizeBusca) {
+		
+		if(sizeBusca.isPresent()) {
+			setSize(sizeBusca.get());
+		}
+		
+		Pageable pageable = PageRequest.of(page, size, new Sort(Direction.DESC, "id"));				
+		setBusca(busca.get());
+		campanhaPage = repository.findByNomeOrDescricaoContaining(getBusca(), getBusca(), pageable);
+		setCampanhaList(campanhaPage.getContent());		
+		
+		return "redirect:/campanhas/";
+	}
+	
+	@PostMapping("/resetabusca")
+	public String resetabusca() {
+		setBusca("");
+		setDataInicial(null);
+		setDataInicial(null);
+		initList();
+		return "redirect:/campanhas/";
+	}
+
 	public Integer getPage() {
 		return page;
 	}
-
-
 
 	public void setPage(Integer page) {
 		this.page = page;
 	}
 
-
-
 	public Integer getSize() {
 		return size;
 	}
-
-
 
 	public void setSize(Integer size) {
 		this.size = size;
 	}
 
-
-
 	public List<Campanha> getCampanhaList() {
 		return campanhaList;
 	}
-
-
 
 	public void setCampanhaList(List<Campanha> campanhaList) {
 		this.campanhaList = campanhaList;
 	}
 
-
-
 	public Page<Campanha> getCampanhaPage() {
 		return campanhaPage;
 	}
-
-
 
 	public void setCampanhaPage(Page<Campanha> campanhaPage) {
 		this.campanhaPage = campanhaPage;
 	}
 
-
-
 	public String getBusca() {
 		return busca;
 	}
-
-
 
 	public void setBusca(String busca) {
 		this.busca = busca;
 	}
 
-
-
 	public List<PorPaginaEnum> getPorPagina() {
 		return porPagina;
 	}
-
-
 
 	public void setPorPagina(List<PorPaginaEnum> porPagina) {
 		this.porPagina = porPagina;
 	}
 
-
-
 	public Date getDataInicial() {
 		return dataInicial;
 	}
-
-
 
 	public void setDataInicial(Date dataInicial) {
 		this.dataInicial = dataInicial;
 	}
 
-
-
 	public Date getDataFinal() {
 		return dataFinal;
 	}
 
-
-
 	public void setDataFinal(Date dataFinal) {
 		this.dataFinal = dataFinal;
 	}
-
-
-
-	public CampanhaRepository getRepository() {
-		return repository;
-	}
-
-	public void setRepository(CampanhaRepository repository) {
-		this.repository = repository;
-	}
-
-	public AcaoRepository getAcaoRepository() {
-		return acaoRepository;
-	}
-
-	public void setAcaoRepository(AcaoRepository acaoRepository) {
-		this.acaoRepository = acaoRepository;
-	}
-
-	public ItemCampanhaRepository getItemCampanhaRepository() {
-		return itemCampanhaRepository;
-	}
-
-	public void setItemCampanhaRepository(ItemCampanhaRepository itemCampanhaRepository) {
-		this.itemCampanhaRepository = itemCampanhaRepository;
-	}
-
-	public ItemDoacaoRepository getItemDoacaoRepository() {
-		return itemDoacaoRepository;
-	}
-
-	public void setItemDoacaoRepository(ItemDoacaoRepository itemDoacaoRepository) {
-		this.itemDoacaoRepository = itemDoacaoRepository;
-	}
-	
-	
-	
-	
-	
 
 }

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.org.cac.enums.PorPaginaEnum;
 import br.org.cac.models.Colaborador;
 import br.org.cac.models.Doacao;
+import br.org.cac.repositories.CampanhaRepository;
 import br.org.cac.repositories.ColaboradorRepository;
 import br.org.cac.repositories.DoacaoRepository;;
 
@@ -45,6 +46,10 @@ public class DoacaoController {
 	
 	@Autowired
 	private ColaboradorRepository colaboradorRepository;
+	
+	@Autowired
+	private CampanhaRepository campanhaRepository;
+
 	
 	
 	private Integer page = 0;
@@ -73,7 +78,7 @@ public class DoacaoController {
 	@GetMapping("/{id}/show")
 	public String show(@PathVariable int id, Model model) {
 		if(repository.findById(id).isPresent()) {
-			model.addAttribute("colaborador", repository.findById(id).get());				
+			model.addAttribute("doacao", repository.findById(id).get());				
 			return "doacoes/show";
 		}
 		initList();
@@ -105,7 +110,7 @@ public class DoacaoController {
 			} catch (Exception e) {
 				System.out.println("Erro ao alterar Doação: "+e.getMessage());
 			}				
-//			return "redirect:/doacoes/"+id+"/show";
+			return "redirect:/doacoes/"+id+"/show";
 		}
 		initList();
 		return "redirect:/doacoes/";
@@ -309,6 +314,7 @@ public class DoacaoController {
 	
 	
 	
+	
 	public BigDecimal parse(final String amount, final Locale locale) throws ParseException {
 	    final NumberFormat format = NumberFormat.getNumberInstance(locale);
 	    if (format instanceof DecimalFormat) {
@@ -332,5 +338,7 @@ public class DoacaoController {
 	public void setDataFinal(Date dataFinal) {
 		this.dataFinal = dataFinal;
 	}
+	
+	
 
 }

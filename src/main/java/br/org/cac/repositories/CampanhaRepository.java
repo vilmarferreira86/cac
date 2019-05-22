@@ -1,9 +1,12 @@
 package br.org.cac.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import br.org.cac.models.Acao;
 import br.org.cac.models.Campanha;
 
 /**
@@ -11,5 +14,5 @@ import br.org.cac.models.Campanha;
 */
 @Repository
 public interface CampanhaRepository extends JpaRepository<Campanha, Integer>, JpaSpecificationExecutor<Campanha> {
-
+	Page<Campanha> findByNomeOrDescricaoContaining(String nome, String descricao, Pageable pageable);
 }

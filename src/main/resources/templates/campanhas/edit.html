@@ -21,7 +21,7 @@
 		}
 		
 	</style>
-    <title>Nova Doação</title>
+    <title>Edição de Campanha</title>
 
   </head>
     <body>
@@ -31,7 +31,7 @@
 <br>
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item"><a href="javascript:void(0)">DASHBOARD</a></li>
-						<li class="breadcrumb-item ">AÇÕES</li>
+						<li class="breadcrumb-item ">CAMPANHAS</li>
 						<li class="breadcrumb-item active">EDITAR</li>
 					</ol>
 				</div>
@@ -43,7 +43,7 @@
 					<div class="card-block">					
 						<div class="row">
 							<div class="col-md-10">
-								<h3 class="card-title">Aditar Ação</h3>
+								<h3 class="card-title">Editar Campanha</h3>
 							</div>
 							<div class="col-md-2">							
 								<a style="color: #fff" class="btn btn-danger" onclick="history.back()"><i class="fas fa-save"></i> Cancelar</a>
@@ -51,10 +51,10 @@
 						</div>	
 						<div class="row">
 							<div class="col-md-12">
-								<form class="form-material m-t-5 row" th:action="@{/acoes/salvar}" method="POST" th:object="${acao}">
+								<form class="form-material m-t-5 row" th:action="@{/campanhas/salvar}" method="POST" th:object="${campanha}">
 									<input type="hidden" th:field="*{id}"/>
                                     <div class="form-group col-md-10 ">
-                                    	<label>Ação</label>
+                                    	<label>Campanha</label>
                                         <input required="required" class="form-control form-control-line" th:field="*{nome}"/>
                                     </div>
                                     <div class="form-group col-md-10 ">
@@ -64,17 +64,27 @@
 
                                     <div class="form-group col-md-4 ">
                                     	<label>Data de Início</label>
-                                        <input required="required" type="date" th:field="*{inicio}" class="form-control form-control-line"> 
+                                        <input required="required" type="date" th:field="*{cadastro}" class="form-control form-control-line"> 
                                     </div>                 
                                                         
                                     <div class="form-group col-md-4 ">
                                     	<label>Data de Término</label>
-                                        <input required="required" type="date" th:field="*{fim}" class="form-control form-control-line"> 
+                                        <input required="required" type="date" th:field="*{dataFim}" class="form-control form-control-line"> 
                                     </div> 
                                     
                                     <div class="form-group col-md-2 ">
-                                    	<label>C. H.</label>
-                                        <input required="required" type="number" th:field="*{cargaHoraria}" class="form-control form-control-line"> 
+                                    	<label>Meta</label>
+                                        <input required="required" type="number" th:field="*{meta}" class="form-control form-control-line"> 
+                                    </div>
+                                    
+                                     <div class="form-group col-md-2 ">
+                                    	<label>Arrecadação</label>
+                                        <input required="required" type="number" th:field="*{arrecadado}" class="form-control form-control-line"> 
+                                    </div>
+                                    
+                                     <div class="form-group col-md-2 ">
+                                    	<label>Situação</label>
+                                        <input type="number" th:field="*{habilitada}" class="form-control form-control-line"> 
                                     </div>
                                     
                                     <div class="col-md-12">

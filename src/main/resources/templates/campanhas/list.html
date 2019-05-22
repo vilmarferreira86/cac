@@ -41,7 +41,7 @@
 				<div class="card-block">
 					<div class="row">
 						<div class="col-md-10">
-							<form action="/acoes/buscarpor" method="POST"
+							<form action="/campanhas/buscarpor" method="POST"
 								class="form-horizontal form-material row">
 
 								<div class="col-md-11">
@@ -105,30 +105,30 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="acao : ${acoes}">
-									<td th:text="${acao.nome}"></td>
+								<tr th:each="campanha : ${campanhas}">
+									<td th:text="${campanha.nome}"></td>
 									<td
-										th:text="${#calendars.format(acao.cadastro, 'dd/MM/yyyy')}">
+										th:text="${campanha.meta}">
 									</td>
 									<td
-										th:text="${#calendars.format(acao.inicio, 'dd/MM/yyyy')}">
+										th:text="${#calendars.format(campanha.cadastro, 'dd/MM/yyyy')}">
 									</td>
 									<td
-										th:text="${#calendars.format(acao.fim, 'dd/MM/yyyy')}">
+										th:text="${#calendars.format(campanha.dataFim, 'dd/MM/yyyy')}">
 									</td>
-									<td th:text="${acao.cargaHoraria}"></td>
+									<td th:text="${campanha.habilitada}"></td>
 									<td>
 										<div class="btn-group" role="group" aria-label="Basic example">
 
-											<a th:href="@{/acoes/} + ${acao.id} +'/editar'"
+											<a th:href="@{/campanhas/} + ${campanha.id} +'/editar'"
 												title="Editar Cadastro" class="btn btn-warning  btn-sm"><i
 												class="fas fa-edit"></i></a> <a
-												th:href="@{/acoes/} + ${acao.id} +'/show'"
+												th:href="@{/campanhas/} + ${campanha.id} +'/show'"
 												title="Ver Cadastro" class="btn btn-success  btn-sm"><i
 												class="fas fa-eye"></i></a>
 
-											<form method="POST" th:action="@{/acoes/delete}">
-												<input type="hidden" name="id" th:value="${acao.id}" />
+											<form method="POST" th:action="@{/campanhas/delete}">
+												<input type="hidden" name="id" th:value="${campanha.id}" />
 												<button title="Excluir"
 													onclick="if (! confirm('Deseja excluir este registro?')) return false"
 													class="btn btn-danger  btn-sm">
@@ -144,7 +144,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-2 col-sm-4 col-4">
-							<form action="/acoes/anterior" method="POST">
+							<form action="/campanhas/anterior" method="POST">
 								<button th:disabled="${!page.hasPrevious()}"
 									class="btn btn-light">
 									<i class="fas fa-arrow-circle-left"></i> Anterior
@@ -156,7 +156,7 @@
 								th:text="${page.getNumber()+1} +' / '+ ${page.getTotalPages()}"></spam>
 						</div>
 						<div class="col-md-2 col-sm-4 col-4">
-							<form action="/acoes/proximo" method="POST">
+							<form action="/campanhas/proximo" method="POST">
 								<button th:disabled="${!page.hasNext()}" class="btn btn-light">
 									Próximo <i class="fas fa-arrow-circle-right"></i>
 								</button>
