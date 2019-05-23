@@ -22,6 +22,9 @@ public class ItemDoacao implements Serializable {
 	private String descricao;
 
 	private BigDecimal valor;
+	
+	@Column
+	private int quantidade;
 
 	//bi-directional many-to-one association to Campanha
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -88,5 +91,15 @@ public class ItemDoacao implements Serializable {
 	public void setItemCampanha(ItemCampanha itemCampanha) {
 		this.itemCampanha = itemCampanha;
 	}
+
+	public int getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
+	}
+	
+	
 
 }

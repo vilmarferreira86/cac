@@ -18,9 +18,8 @@ public class ItemCampanha implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-
-	private String nome;
-
+	@Column
+	private int quantidade;
 	private BigDecimal valor;
 
 	//bi-directional many-to-one association to Campanha
@@ -31,6 +30,10 @@ public class ItemCampanha implements Serializable {
 	//bi-directional many-to-one association to ItemDoacao
 	@OneToMany(mappedBy="itemCampanha")
 	private List<ItemDoacao> itemDoacaos;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="produto")
+	private Produto produto;
 
 	public ItemCampanha() {
 	}
@@ -43,12 +46,14 @@ public class ItemCampanha implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return this.nome;
+	
+
+	public int getQuantidade() {
+		return quantidade;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
 	}
 
 	public BigDecimal getValor() {
@@ -88,5 +93,15 @@ public class ItemCampanha implements Serializable {
 
 		return itemDoacao;
 	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+	
+	
 
 }
