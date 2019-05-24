@@ -60,13 +60,14 @@
 								th:object="${campanha}">
 								<input type="hidden" th:field="*{id}" />
 								<div class="form-group col-md-10 ">
-									<label>Campanhas</label> <select multiple="multiple"
+									<label>Item:</label> <select multiple="multiple"
 										class="js-data-example-ajax form-control"
-										th:field="*{campanhas}">
-										<option th:each="campanha : ${campanhas}"
-											th:value="${{campanha}}" th:text="${campanha.nome}"></option>
+										th:field="*{items}">
+										<option th:each="item : ${items}"
+											th:value="${{item}}" th:text="${item.nome}"></option>
 									</select>
 								</div>
+								
 
 								<div class="col-md-12">
 									<button class="btn btn-success">
@@ -83,7 +84,7 @@
 		<script type="text/javascript">
 			$('.js-data-example-ajax').select2({
 				minimumInputLength : 2,
-				placeholder : 'Selecione uma ou mais Campanhas para vincular!'
+				placeholder : 'Selecione uma ou mais itens de campanhas para vincular!'
 			});
 		</script>
 	</section>

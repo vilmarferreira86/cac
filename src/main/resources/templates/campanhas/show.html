@@ -72,7 +72,9 @@
         					<h3>Itens de Campanhas Vinculadas</h3>
         					<table class="table table-sm">
         						<tbody>
-        							
+        							<tr th:each="item : ${itensCampanha}">
+        								<td>[[${item.item.nome}]]</td>
+        							</tr>
         						</tbody>
         					
         					</table>

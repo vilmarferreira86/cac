@@ -56,9 +56,9 @@ public class Campanha implements Serializable {
 		)
 	private List<Acao> acaos;
 
-	//bi-directional many-to-one association to ItemCampanha
-	@OneToMany(mappedBy="campanha")
-	private List<ItemCampanha> itemCampanhas;
+	@Transient
+	//@OneToMany(mappedBy = "campanha")
+	private List<Item> items;
 
 	//bi-directional many-to-one association to ItemDoacao
 	@OneToMany(mappedBy="campanha")
@@ -147,15 +147,9 @@ public class Campanha implements Serializable {
 		this.acaos = acaos;
 	}
 
-	public List<ItemCampanha> getItemCampanhas() {
-		return this.itemCampanhas;
-	}
+	
 
-	public void setItemCampanhas(List<ItemCampanha> itemCampanhas) {
-		this.itemCampanhas = itemCampanhas;
-	}
-
-	public ItemCampanha addItemCampanha(ItemCampanha itemCampanha) {
+	/*public ItemCampanha addItemCampanha(ItemCampanha itemCampanha) {
 		getItemCampanhas().add(itemCampanha);
 		itemCampanha.setCampanha(this);
 
@@ -167,10 +161,29 @@ public class Campanha implements Serializable {
 		itemCampanha.setCampanha(null);
 
 		return itemCampanha;
-	}
+	}*/
+
+	
+	
 
 	public List<ItemDoacao> getItemDoacaos() {
 		return this.itemDoacaos;
+	}
+
+	
+
+	/*
+	 * public List<CampanhaItem> getItems() { return items; }
+	 * 
+	 * public void setItems(List<CampanhaItem> items) { this.items = items; }
+	 */
+
+	public List<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 
 	public void setItemDoacaos(List<ItemDoacao> itemDoacaos) {

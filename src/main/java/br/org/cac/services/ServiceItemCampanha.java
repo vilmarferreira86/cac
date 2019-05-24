@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 
 import br.org.cac.DTO.ItemCampanhaDTO;
 import br.org.cac.arquitetura.GenericeService;
-import br.org.cac.models.ItemCampanha;
-import br.org.cac.repositories.ItemCampanhaRepository;
+import br.org.cac.models.Item;
+import br.org.cac.repositories.ItemRepository;
 
 @Service
-public class ServiceItemCampanha extends GenericeService<ItemCampanha, ItemCampanhaRepository, ItemCampanhaDTO> {
+public class ServiceItemCampanha extends GenericeService<Item, ItemRepository, ItemCampanhaDTO> {
 
 }

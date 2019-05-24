@@ -22,12 +22,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.org.cac.DTO.ItemCampanhaDTO;
 import br.org.cac.enums.PorPaginaEnum;
 import br.org.cac.models.Acao;
 import br.org.cac.models.Campanha;
+import br.org.cac.models.CampanhaItem;
+import br.org.cac.models.CampanhaItemPK;
+import br.org.cac.models.Item;
 import br.org.cac.repositories.AcaoRepository;
+import br.org.cac.repositories.CampanhaItemRepository;
 import br.org.cac.repositories.CampanhaRepository;
-import br.org.cac.repositories.ItemCampanhaRepository;
+import br.org.cac.repositories.ItemRepository;
 import br.org.cac.repositories.ItemDoacaoRepository;
 
 @Controller
@@ -40,10 +45,15 @@ public class CampanhaController {
 	private AcaoRepository acaoRepository;
 
 	@Autowired
-	private ItemCampanhaRepository itemCampanhaRepository;
+	private ItemRepository itemRepository;
 
 	@Autowired
 	private ItemDoacaoRepository itemDoacaoRepository;
+	
+	@Autowired
+	private CampanhaItemRepository campanhaItemRepository;
+	
+	
 
 	private Integer page = 0;
 	private Integer size = 0;
@@ -67,8 +77,17 @@ public class CampanhaController {
 	@GetMapping("/{id}/show")
 	public String show(@PathVariable int id, Model model) {
 		if (repository.findById(id).isPresent()) {
-			model.addAttribute("campanha", repository.findById(id).get());
+			Campanha campanha = repository.findById(id).get();
+			model.addAttribute("campanha", campanha);
+			
+			List<CampanhaItem> campanhaItens = campanhaItemRepository.findAllByCampanha(campanha);
+			
+			model.addAttribute("itensCampanha",campanhaItens);
+			
 			return "campanhas/show";
+			
+			
+			
 		}
 		initList();
 		return "redirect:/campanhas";
@@ -125,9 +144,39 @@ public class CampanhaController {
 	public String vincularItemCampanha(@PathVariable int id, Model model) {
 		Campanha campanha = repository.findById(id).get();
 		model.addAttribute("campanha",campanha);
-	//	model.addAttribute("campanhas",campanhaRepository.findAll());
+		model.addAttribute("items",itemRepository.findAll());
 		return"campanhas/vincular-itemcampanha";
 	}
+	
+	@PostMapping("/{id}/vincular-itemcampanha")
+	public String salvarVincularItemCampanha(@PathVariable int id, @ModelAttribute @Valid Campanha campanha,  Model model) {
+    	try {
+    		System.out.println("Id Campanha---->"+campanha.getItems().get(0).getNome());
+    		Campanha _campanhaSaved = repository.findById(id).get();
+    		
+    		for(Item item : campanha.getItems()) {
+    			
+    			CampanhaItem campanhaItem = new CampanhaItem();
+    			CampanhaItemPK pk = new CampanhaItemPK();
+    			pk.setIdCampanha(campanha.getId());
+    			pk.setIdItem(item.getId());
+    			//campanhaItem.getId().setIdCampanha(campanha.getId());
+    			//campanhaItem.getId().setIdItem(item.getId());
+    			campanhaItem.setItem(item);
+    			campanhaItem.setCampanha(campanha);
+    			campanhaItem.setQuantidade(10);
+    			campanhaItem.setId(pk);
+    			campanhaItemRepository.saveAndFlush(campanhaItem);
+    		}
+    		//_campanhaSaved.setItems(campanha.getItems()); // o erro está aqui pois estou setado um objeto Item em um CampanhaItem
+		//	campanhaItemRepository.saveAndFlush(_campanhaSaved);
+		} catch (Exception e) {
+			System.out.println("Erro ao salvar Item Campanha: "+e.getMessage());
+		}
+		initList();
+		return "redirect:/campanhas/"+id+"/show";
+	}
+	
 
 	/**
 	 * Comportamentos

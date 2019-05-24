@@ -19,9 +19,7 @@ public class ItemDoacao implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
-	private String descricao;
 
-	private BigDecimal valor;
 	
 	@Column
 	private int quantidade;
@@ -36,10 +34,10 @@ public class ItemDoacao implements Serializable {
 	@JoinColumn(name="doacao")
 	private Doacao doacao;
 
-	//bi-directional many-to-one association to ItemCampanha
+	//bi-directional many-to-one association to item
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="item_campanha")
-	private ItemCampanha itemCampanha;
+	@JoinColumn(name="id_item")
+	private Item items;
 
 	public ItemDoacao() {
 	}
@@ -52,21 +50,7 @@ public class ItemDoacao implements Serializable {
 		this.id = id;
 	}
 
-	public String getDescricao() {
-		return this.descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public BigDecimal getValor() {
-		return this.valor;
-	}
-
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
-	}
+	
 
 	public Campanha getCampanha() {
 		return this.campanha;
@@ -84,12 +68,14 @@ public class ItemDoacao implements Serializable {
 		this.doacao = doacao;
 	}
 
-	public ItemCampanha getItemCampanha() {
-		return this.itemCampanha;
+	
+
+	public Item getItems() {
+		return items;
 	}
 
-	public void setItemCampanha(ItemCampanha itemCampanha) {
-		this.itemCampanha = itemCampanha;
+	public void setItems(Item items) {
+		this.items = items;
 	}
 
 	public int getQuantidade() {
