@@ -33,7 +33,6 @@ import br.org.cac.repositories.AcaoRepository;
 import br.org.cac.repositories.CampanhaItemRepository;
 import br.org.cac.repositories.CampanhaRepository;
 import br.org.cac.repositories.ItemRepository;
-import br.org.cac.repositories.ItemDoacaoRepository;
 
 @Controller
 @RequestMapping("/campanhas")
@@ -47,8 +46,7 @@ public class CampanhaController {
 	@Autowired
 	private ItemRepository itemRepository;
 
-	@Autowired
-	private ItemDoacaoRepository itemDoacaoRepository;
+	
 	
 	@Autowired
 	private CampanhaItemRepository campanhaItemRepository;

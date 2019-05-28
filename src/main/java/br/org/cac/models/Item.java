@@ -34,7 +34,7 @@ public class Item implements Serializable {
 	
 
 	//bi-directional many-to-one association to ItemDoacao
-	@OneToMany(mappedBy="items")
+	@OneToMany(mappedBy="item")
 	private List<ItemDoacao> itemDoacaos;
 	
 	

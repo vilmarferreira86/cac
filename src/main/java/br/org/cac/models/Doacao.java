@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
 
@@ -42,6 +43,12 @@ public class Doacao implements Serializable {
 
 	@OneToMany(mappedBy="doacao")
 	private List<ItemDoacao> itemDoacaos;
+	
+	@Transient
+	private List<Campanha> campanhas;
+	
+	@Transient
+	private List<Item> items;
 
 	public Doacao() {
 	}
@@ -103,5 +110,25 @@ public class Doacao implements Serializable {
 
 		return itemDoacao;
 	}
+
+	public List<Campanha> getCampanhas() {
+		return campanhas;
+	}
+
+	public void setCampanhas(List<Campanha> campanhas) {
+		this.campanhas = campanhas;
+	}
+
+	public List<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Item> items) {
+		this.items = items;
+	}
+
+	
+	
+	
 
 }

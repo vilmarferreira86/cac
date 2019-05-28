@@ -2,6 +2,9 @@ package br.org.cac.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.springframework.lang.Nullable;
+
 import java.math.BigDecimal;
 
 
@@ -26,7 +29,7 @@ public class ItemDoacao implements Serializable {
 
 	//bi-directional many-to-one association to Campanha
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="campanha")
+	@JoinColumn(name="campanha", nullable = true)
 	private Campanha campanha;
 
 	//bi-directional many-to-one association to Doacao
@@ -37,7 +40,7 @@ public class ItemDoacao implements Serializable {
 	//bi-directional many-to-one association to item
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_item")
-	private Item items;
+	private Item item;
 
 	public ItemDoacao() {
 	}
@@ -70,12 +73,14 @@ public class ItemDoacao implements Serializable {
 
 	
 
-	public Item getItems() {
-		return items;
+	
+
+	public Item getItem() {
+		return item;
 	}
 
-	public void setItems(Item items) {
-		this.items = items;
+	public void setItem(Item item) {
+		this.item = item;
 	}
 
 	public int getQuantidade() {

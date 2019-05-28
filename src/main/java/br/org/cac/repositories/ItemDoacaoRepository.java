@@ -1,9 +1,18 @@
 package br.org.cac.repositories;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import br.org.cac.models.Campanha;
+import br.org.cac.models.Doacao;
+import br.org.cac.models.Item;
 import br.org.cac.models.ItemDoacao;
 
 /**
@@ -11,5 +20,20 @@ import br.org.cac.models.ItemDoacao;
 */
 @Repository
 public interface ItemDoacaoRepository extends JpaRepository<ItemDoacao, Integer>, JpaSpecificationExecutor<ItemDoacao> {
+
+	List<ItemDoacao> findAllByDoacao(Doacao doacao);
+
+	List<ItemDoacao> findAllByCampanha(Campanha campanha);
+
+	List<ItemDoacao> findAllByItem(Item item);
+	
+	@Query("SELECT id FROM ItemDoacao id WHERE id.doacao = :doacao and id.item = :item")
+	ItemDoacao findAllByDoacaoByItem(@Param("doacao") Doacao doacao, @Param("item") Item item);
+	
+	@Query("SELECT id FROM ItemDoacao id WHERE id.doacao = :doacao and id.campanha = :campanha")
+	ItemDoacao findAllByDoacaoByCampanha(@Param("doacao") Doacao doacao, @Param("campanha") Campanha campanha);
+	
+//	List<ItemDoacao> findAllByCampanhaByDocao(Campanha campanha, Doacao doacao);
+
 
 }

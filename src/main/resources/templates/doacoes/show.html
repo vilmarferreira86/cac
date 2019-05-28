@@ -38,6 +38,7 @@
 								class="fas fa-arrow-left"></i> Voltar para listagem</a>
 								<a th:href="@{/doacoes/} + ${doacao.id} +'/editar'" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Editar</a>
 		        				<a th:href="@{/doacoes/} + ${doacao.id} +'/vincular-campanha'" class="btn btn-sm btn-primary"><i class="fas fa-calendar-week"></i> Vincular Campanha</a>
+		        				<a th:href="@{/doacoes/} + ${doacao.id} +'/vincular-itemdoacao'" class="btn btn-sm btn-primary"><i class="fas fa-calendar-week"></i> Vincular Item</a>
 						</div>
 						<br> <br>
 		        			<div class="table-responsive col-md-12">
@@ -59,7 +60,23 @@
         						</tbody>
         					</table>
         					<h3>Campanhas Vinculadas</h3>
+        					<table class="table table-sm">
+        						<tbody>
+        							<tr th:each="doacao : ${itemDoacao}">
+        								<td>[[${doacao.campanha == null ? '' : doacao.campanha.nome}]] </td>
+        							</tr>
+        						</tbody>
         					
+        					</table>
+        					<h3>Itens Vinculadas</h3>
+        					<table class="table table-sm">
+        						<tbody>
+        							<tr th:each="doacao : ${itemDoacao}">
+        								<td>[[${doacao.item == null ? '' : doacao.item.nome}]] </td>
+        							</tr>
+        						</tbody>
+        					
+        					</table>
 					</div>
 				</div>
 			</div>
