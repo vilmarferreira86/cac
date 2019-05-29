@@ -44,7 +44,9 @@ import br.org.cac.repositories.CampanhaRepository;
 import br.org.cac.repositories.ColaboradorRepository;
 import br.org.cac.repositories.DoacaoRepository;
 import br.org.cac.repositories.ItemDoacaoRepository;
-import br.org.cac.repositories.ItemRepository;;
+import br.org.cac.repositories.ItemRepository;
+
+;
 
 @Controller
 @RequestMapping("/doacoes")
@@ -80,10 +82,14 @@ public class DoacaoController {
 		model.addAttribute("doacoes", getDoacaoList());
 		model.addAttribute("page", getDoacaoPage());
 		model.addAttribute("busca", getBusca());
-		model.addAttribute("dataInicial",
-				getDataInicial() != null ? new SimpleDateFormat("yyyy-MM-dd").format(getDataInicial()) : "");
-		model.addAttribute("dataFinal",
-				getDataFinal() != null ? new SimpleDateFormat("yyyy-MM-dd").format(getDataFinal()) : "");
+		model.addAttribute(
+				"dataInicial",
+				getDataInicial() != null ? new SimpleDateFormat("yyyy-MM-dd")
+						.format(getDataInicial()) : "");
+		model.addAttribute(
+				"dataFinal",
+				getDataFinal() != null ? new SimpleDateFormat("yyyy-MM-dd")
+						.format(getDataFinal()) : "");
 		model.addAttribute("porPagina", getPorPagina());
 		model.addAttribute("size", getSize());
 		return "doacoes/list";
@@ -94,7 +100,8 @@ public class DoacaoController {
 		if (repository.findById(id).isPresent()) {
 			Doacao doacao = repository.findById(id).get();
 			model.addAttribute("doacao", repository.findById(id).get());
-			List<ItemDoacao> itemDoacaos = itemDoacaoRepository.findAllByDoacao(doacao);
+			List<ItemDoacao> itemDoacaos = itemDoacaoRepository
+					.findAllByDoacao(doacao);
 
 			model.addAttribute("itemDoacao", itemDoacaos);
 			return "doacoes/show";
@@ -114,13 +121,16 @@ public class DoacaoController {
 	}
 
 	@PostMapping("/{id}/salvar")
-	public String salvar(@PathVariable int id, @RequestParam("cadastro") Optional<String> _cadastro,
+	public String salvar(@PathVariable int id,
+			@RequestParam("cadastro") Optional<String> _cadastro,
 			@RequestParam("total") Optional<String> _total, Model model) {
 		Doacao doacao = repository.findById(id).get();
 		if (doacao != null) {
 			try {
-				doacao.setCadastro(new SimpleDateFormat("yyyy-MM-dd").parse(_cadastro.get()));
-				doacao.setTotal(parse(_total.get().replace(".", ""), Locale.FRANCE));
+				doacao.setCadastro(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(_cadastro.get()));
+				doacao.setTotal(parse(_total.get().replace(".", ""),
+						Locale.FRANCE));
 				repository.saveAndFlush(doacao);
 			} catch (Exception e) {
 				System.out.println("Erro ao alterar Doação: " + e.getMessage());
@@ -132,18 +142,23 @@ public class DoacaoController {
 	}
 
 	@PostMapping("/salvar")
-	public String salvarAlteracao(@RequestParam("colaborador") Optional<String> _colaborador,
-			@RequestParam("cadastro") Optional<String> _cadastro, @RequestParam("total") Optional<String> _total,
-			Model model) {
+	public String salvarAlteracao(
+			@RequestParam("colaborador") Optional<String> _colaborador,
+			@RequestParam("cadastro") Optional<String> _cadastro,
+			@RequestParam("total") Optional<String> _total, Model model) {
 
-		if (!_colaborador.isPresent() || !_cadastro.isPresent() || !_total.isPresent()) {
+		if (!_colaborador.isPresent() || !_cadastro.isPresent()
+				|| !_total.isPresent()) {
 			return "doacoes/create";
 		} else {
 			Doacao doacao = new Doacao();
 			try {
-				doacao.setColaborador(colaboradorRepository.getOne(Integer.parseInt(_colaborador.get())));
-				doacao.setCadastro(new SimpleDateFormat("yyyy-MM-dd").parse(_cadastro.get()));
-				doacao.setTotal(parse(_total.get().replace(".", ""), Locale.FRANCE));
+				doacao.setColaborador(colaboradorRepository.getOne(Integer
+						.parseInt(_colaborador.get())));
+				doacao.setCadastro(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(_cadastro.get()));
+				doacao.setTotal(parse(_total.get().replace(".", ""),
+						Locale.FRANCE));
 				repository.saveAndFlush(doacao);
 			} catch (Exception e) {
 				System.out.println("Erro ao salvar Doacão: " + e.getMessage());
@@ -164,74 +179,36 @@ public class DoacaoController {
 	}
 
 	@PostMapping("/{id}/vincular-itemdoacao")
-	public String salvarVincularItemDoacao(@PathVariable int id, @ModelAttribute @Valid Doacao doacao, Model model)
+	public String salvarVincularItemDoacao(@PathVariable int id,
+			@ModelAttribute @Valid Doacao doacao, Model model)
 			throws PersistenceException {
 		try {
-			List<Campanha> listCampanhas = campanhaRepository.findAll();
-			List<ItemDoacao> listCampanhasDoacao = null;
-			ItemDoacao itemDoacao = null;
-			for (Campanha campanha : listCampanhas) {
-				listCampanhasDoacao = itemDoacaoRepository.findAllByCampanha(campanha);
-			}
+			List<ItemDoacao> listItemDoacao = itemDoacaoRepository
+					.findAllByDoacao(doacao);
+			if (doacao != null && listItemDoacao.isEmpty()) {
 
-			for (Item item : doacao.getItems()) {
-				itemDoacao = new ItemDoacao();
-				itemDoacao.setItem(item);
-				itemDoacao.setDoacao(doacao);
-				// System.out.println("Campanha-->" + campanha.getNome());
-				itemDoacaoRepository.saveAndFlush(itemDoacao);
-				for (ItemDoacao _itemDoacao : listCampanhasDoacao) {
-					itemDoacao = new ItemDoacao();
-					itemDoacao.setItem(item);
-					itemDoacao.setCampanha(_itemDoacao.getCampanha());
-
+				for (Item item : doacao.getItems()) {
+					ItemDoacao itemDoacao = new ItemDoacao();
+					itemDoacao.setQuantidade(1);
 					itemDoacao.setDoacao(doacao);
-					// System.out.println("Campanha-->" + campanha.getNome());
+					itemDoacao.setItem(item);
 					itemDoacaoRepository.saveAndFlush(itemDoacao);
 				}
 
-				// campanhaItem.getId().setIdCampanha(campanha.getId());
-				// campanhaItem.getId().setIdItem(item.getId());
+			} else if (doacao != null && !listItemDoacao.isEmpty()) {
+				for (Item item : doacao.getItems()) {
+					ItemDoacao itemDoacao2 = new ItemDoacao();
+					for(ItemDoacao itemDoacao : listItemDoacao){
+						itemDoacao2.setCampanha(itemDoacao.getCampanha());
+
+					}
+					itemDoacao2.setItem(item);
+					itemDoacao2.setQuantidade(1);
+					itemDoacao2.setDoacao(doacao);
+					itemDoacaoRepository.saveAndFlush(itemDoacao2);
+				}
 
 			}
-			// Doacao _doacao = repository.findById(id).get();
-			// Campanha campanha = reposi
-			// List<ItemDoacao> listDoacoes = itemDoacaoRepository.findAllByDoacao(doacao);
-			/*
-			 * List<Item> listItems = itemRepository.findAll(); List<Campanha> listCampanhas
-			 * = campanhaRepository.findAll(); List<ItemDoacao> listCampanhasDoacao = null;
-			 * 
-			 * for (Campanha campanha : listCampanhas) { listCampanhasDoacao =
-			 * itemDoacaoRepository.findAllByCampanha(campanha); for (Item item : listItems)
-			 * { if (campanha != null && item == null) {
-			 * 
-			 * if (doacao != null && listCampanhasDoacao.size() > 0) { for (ItemDoacao
-			 * itemDoacao : listCampanhasDoacao) { //
-			 * itemDoacaoRepository.saveAndFlush(itemDoacao); for (Item items :
-			 * doacao.getItems()) { itemDoacao.setItems(items);
-			 * itemDoacaoRepository.saveAndFlush(itemDoacao); } } } } else { for(ItemDoacao
-			 * itemDoacao : listCampanhasDoacao) { for (Item items : doacao.getItems()) {
-			 * itemDoacao.setItems(items); itemDoacaoRepository.save(itemDoacao); } }
-			 * 
-			 * 
-			 * 
-			 * 
-			 * } }
-			 * 
-			 * }
-			 */
-
-			/*
-			 * if (_doacao != null && listItemsDoacao.size() > 0) { for (ItemDoacao
-			 * itemDoacao : listItemsDoacao) { itemDoacao.setQuantidade(1); for (Item item :
-			 * doacao.getItems()) { itemDoacao.setItems(item);
-			 * itemDoacaoRepository.saveAndFlush(itemDoacao);
-			 * 
-			 * }
-			 * 
-			 * 
-			 * }
-			 */
 
 		}
 
@@ -251,28 +228,57 @@ public class DoacaoController {
 	}
 
 	@PostMapping("/{id}/vincular-campanha")
-	public String salvarVincularCampanha(@PathVariable int id, @ModelAttribute @Valid Doacao doacao, Model model)
+	public String salvarVincularCampanha(@PathVariable int id,
+			@ModelAttribute @Valid Doacao doacao, Model model)
 			throws PersistenceException {
 		Doacao _doacao = repository.findById(id).get();
-		List<ItemDoacao> listItemsDoacao = itemDoacaoRepository.findAllByDoacao(_doacao);
-		List<Campanha> listCampanhas = campanhaRepository.findAll();
-		
-		if (_doacao != null && _doacao.getId() == doacao.getId()) {
-			try {
-				for(ItemDoacao itemDoacao : listItemsDoacao) {
-					for(Campanha campanha : listCampanhas) {
-						itemDoacao.setCampanha(campanha);
-						itemDoacaoRepository.saveAndFlush(itemDoacao);
+		List<ItemDoacao> listItemDoacao = itemDoacaoRepository
+				.findAllByDoacao(doacao);
+
+		if (doacao != null && listItemDoacao.isEmpty()) {
+			ItemDoacao itemDoacao = new ItemDoacao();
+			itemDoacao.setDoacao(doacao);
+
+			for (Campanha campanha : doacao.getCampanhas()) {
+				itemDoacao.setCampanha(campanha);
+			}
+			itemDoacao.setQuantidade(1);
+			itemDoacaoRepository.saveAndFlush(itemDoacao);
+		} else if (doacao != null && !listItemDoacao.isEmpty()) {
+			for (ItemDoacao itemDoacao : listItemDoacao) {
+				if (itemDoacao.getItem() == null) {
+					for (Campanha campanha : doacao.getCampanhas()) {
+						List<ItemDoacao> listCampanhasDoacao = itemDoacaoRepository
+								.findAllByDoacaoByCampanha(doacao, campanha);
+						if (listCampanhasDoacao != null) {
+							itemDoacaoRepository.atualizarCampanha(doacao,
+									campanha);
+						} else {
+							itemDoacaoRepository.atualizarCampanha(doacao,
+									campanha);
+						}
+					}
+				} else {
+					for (Campanha campanha : doacao.getCampanhas()) {
+						List<ItemDoacao> listCampanhasDoacao = itemDoacaoRepository
+								.findAllByDoacaoByCampanhaByItem(doacao,
+										campanha, itemDoacao.getItem());
+						if (listCampanhasDoacao != null) {
+							itemDoacaoRepository.atualizarCampanhaItem(doacao,
+									campanha, itemDoacao.getItem());
+						} else {
+							itemDoacaoRepository.atualizarCampanhaItem(doacao,
+									campanha, itemDoacao.getItem());
+						}
 					}
 				}
-
-			} catch (PersistenceException e) {
-				System.out.println("Erro ao salvar Item Doacao: " + e.getMessage());
 			}
 
 		}
+
 		initList();
 		return "redirect:/doacoes/" + id + "/show";
+
 	}
 
 	@GetMapping("/novo")
@@ -296,7 +302,8 @@ public class DoacaoController {
 	@PostConstruct
 	public void initList() {
 		setSize(5);
-		Pageable pageable = PageRequest.of(page, size, new Sort(Direction.DESC, "id"));
+		Pageable pageable = PageRequest.of(page, size, new Sort(Direction.DESC,
+				"id"));
 		setBusca("");
 		setDataFinal(null);
 		setDataInicial(null);
@@ -307,16 +314,22 @@ public class DoacaoController {
 	@PostMapping("/proximo")
 	public String proximo() {
 		if (doacaoPage.hasNext()) {
-			if (!getBusca().equals("") && getDataInicial() != null && getDataFinal() != null) {
-				doacaoPage = repository.findByColaboradorNomeContainingAndCadastroBetween(getBusca(), getDataInicial(),
+			if (!getBusca().equals("") && getDataInicial() != null
+					&& getDataFinal() != null) {
+				doacaoPage = repository
+						.findByColaboradorNomeContainingAndCadastroBetween(
+								getBusca(), getDataInicial(), getDataFinal(),
+								doacaoPage.nextPageable());
+			}
+			if (getBusca().equals("") && getDataInicial() != null
+					&& getDataFinal() != null) {
+				doacaoPage = repository.findByCadastroBetween(getDataInicial(),
 						getDataFinal(), doacaoPage.nextPageable());
 			}
-			if (getBusca().equals("") && getDataInicial() != null && getDataFinal() != null) {
-				doacaoPage = repository.findByCadastroBetween(getDataInicial(), getDataFinal(),
-						doacaoPage.nextPageable());
-			}
-			if (!getBusca().equals("") && getDataInicial() == null && getDataFinal() == null) {
-				doacaoPage = repository.findByColaboradorNomeContaining(getBusca(), doacaoPage.nextPageable());
+			if (!getBusca().equals("") && getDataInicial() == null
+					&& getDataFinal() == null) {
+				doacaoPage = repository.findByColaboradorNomeContaining(
+						getBusca(), doacaoPage.nextPageable());
 			}
 			setDoacaoList(doacaoPage.getContent());
 		}
@@ -326,16 +339,22 @@ public class DoacaoController {
 	@PostMapping("/anterior")
 	public String anterior() {
 		if (doacaoPage.hasPrevious()) {
-			if (!getBusca().equals("") && getDataInicial() != null && getDataFinal() != null) {
-				doacaoPage = repository.findByColaboradorNomeContainingAndCadastroBetween(getBusca(), getDataInicial(),
+			if (!getBusca().equals("") && getDataInicial() != null
+					&& getDataFinal() != null) {
+				doacaoPage = repository
+						.findByColaboradorNomeContainingAndCadastroBetween(
+								getBusca(), getDataInicial(), getDataFinal(),
+								doacaoPage.previousPageable());
+			}
+			if (getBusca().equals("") && getDataInicial() != null
+					&& getDataFinal() != null) {
+				doacaoPage = repository.findByCadastroBetween(getDataInicial(),
 						getDataFinal(), doacaoPage.previousPageable());
 			}
-			if (getBusca().equals("") && getDataInicial() != null && getDataFinal() != null) {
-				doacaoPage = repository.findByCadastroBetween(getDataInicial(), getDataFinal(),
-						doacaoPage.previousPageable());
-			}
-			if (!getBusca().equals("") && getDataInicial() == null && getDataFinal() == null) {
-				doacaoPage = repository.findByColaboradorNomeContaining(getBusca(), doacaoPage.previousPageable());
+			if (!getBusca().equals("") && getDataInicial() == null
+					&& getDataFinal() == null) {
+				doacaoPage = repository.findByColaboradorNomeContaining(
+						getBusca(), doacaoPage.previousPageable());
 			}
 			setDoacaoList(doacaoPage.getContent());
 		}
@@ -345,42 +364,55 @@ public class DoacaoController {
 	@PostMapping("/buscarpor")
 	public String buscarpor(@RequestParam("busca") Optional<String> busca,
 			@RequestParam("dataInicial") Optional<String> _dataInicial,
-			@RequestParam("dataFinal") Optional<String> _dataFinal, @RequestParam("size") Optional<Integer> sizeBusca) {
+			@RequestParam("dataFinal") Optional<String> _dataFinal,
+			@RequestParam("size") Optional<Integer> sizeBusca) {
 
 		if (sizeBusca.isPresent()) {
 			setSize(sizeBusca.get());
 		}
 
-		Pageable pageable = PageRequest.of(page, size, new Sort(Direction.DESC, "id"));
+		Pageable pageable = PageRequest.of(page, size, new Sort(Direction.DESC,
+				"id"));
 
-		if (!busca.get().equals("") && _dataInicial.get().equals("") && _dataFinal.get().equals("")) {
+		if (!busca.get().equals("") && _dataInicial.get().equals("")
+				&& _dataFinal.get().equals("")) {
 			setBusca(busca.get());
-			doacaoPage = repository.findByColaboradorNomeContaining(getBusca(), pageable);
+			doacaoPage = repository.findByColaboradorNomeContaining(getBusca(),
+					pageable);
 			setDoacaoList(doacaoPage.getContent());
 		}
 
-		if (!busca.get().equals("") && !_dataInicial.get().equals("") && !_dataFinal.get().equals("")) {
+		if (!busca.get().equals("") && !_dataInicial.get().equals("")
+				&& !_dataFinal.get().equals("")) {
 			try {
-				setDataInicial(new SimpleDateFormat("yyyy-MM-dd").parse(_dataInicial.get()));
-				setDataFinal(new SimpleDateFormat("yyyy-MM-dd").parse(_dataFinal.get()));
+				setDataInicial(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(_dataInicial.get()));
+				setDataFinal(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(_dataFinal.get()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 
 			setBusca(busca.get());
-			doacaoPage = repository.findByColaboradorNomeContainingAndCadastroBetween(getBusca(), getDataInicial(),
+			doacaoPage = repository
+					.findByColaboradorNomeContainingAndCadastroBetween(
+							getBusca(), getDataInicial(), getDataFinal(),
+							pageable);
+			setDoacaoList(doacaoPage.getContent());
+		}
+
+		if (busca.get().equals("") && !_dataInicial.get().equals("")
+				&& !_dataFinal.get().equals("")) {
+			try {
+				setDataInicial(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(_dataInicial.get()));
+				setDataFinal(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(_dataFinal.get()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			doacaoPage = repository.findByCadastroBetween(getDataInicial(),
 					getDataFinal(), pageable);
-			setDoacaoList(doacaoPage.getContent());
-		}
-
-		if (busca.get().equals("") && !_dataInicial.get().equals("") && !_dataFinal.get().equals("")) {
-			try {
-				setDataInicial(new SimpleDateFormat("yyyy-MM-dd").parse(_dataInicial.get()));
-				setDataFinal(new SimpleDateFormat("yyyy-MM-dd").parse(_dataFinal.get()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			doacaoPage = repository.findByCadastroBetween(getDataInicial(), getDataFinal(), pageable);
 			setDoacaoList(doacaoPage.getContent());
 		}
 
@@ -449,7 +481,8 @@ public class DoacaoController {
 		this.porPagina = porPagina;
 	}
 
-	public BigDecimal parse(final String amount, final Locale locale) throws ParseException {
+	public BigDecimal parse(final String amount, final Locale locale)
+			throws ParseException {
 		final NumberFormat format = NumberFormat.getNumberInstance(locale);
 		if (format instanceof DecimalFormat) {
 			((DecimalFormat) format).setParseBigDecimal(true);

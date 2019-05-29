@@ -15,4 +15,5 @@ import br.org.cac.models.Campanha;
 @Repository
 public interface CampanhaRepository extends JpaRepository<Campanha, Integer>, JpaSpecificationExecutor<Campanha> {
 	Page<Campanha> findByNomeOrDescricaoContaining(String nome, String descricao, Pageable pageable);
+	
 }
