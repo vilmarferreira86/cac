@@ -1,5 +1,6 @@
 package br.org.cac.repositories;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -54,6 +55,10 @@ public interface ItemDoacaoRepository extends
 	@Query("Update ItemDoacao id set id.campanha = :campanha where id.doacao=:doacao and id.item = :item")
 	void atualizarCampanhaItem(@Param("doacao") Doacao doacao,
 			@Param("campanha") Campanha campanha, @Param("item") Item item);
+
+	@Query("SELECT id FROM ItemDoacao id WHERE id.doacao.cadastro BETWEEN :dataInicial AND :dataFinal")
+	List<ItemDoacao> findAllByDataInicioByDataFim(@Param("dataInicial") Date dataInicial,
+			@Param("dataFinal") Date dataFinal);
 	
 	
 

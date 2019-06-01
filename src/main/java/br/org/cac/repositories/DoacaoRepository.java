@@ -8,8 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import br.org.cac.models.Campanha;
 import br.org.cac.models.Colaborador;
 import br.org.cac.models.Doacao;
 
@@ -34,6 +37,10 @@ public interface DoacaoRepository extends JpaRepository<Doacao, Integer>, JpaSpe
 	List<Doacao> findByCadastro(Date cadastro);
 	
 	Page<Doacao> findByColaboradorNomeOrCadastro(Optional<String> nome, Date cadastro, Pageable pageable);
+
+	@Query("SELECT d FROM Doacao d WHERE d.cadastro BETWEEN :dataInicial AND :dataFinal")
+	List<Doacao> findAllByDataInicioByDataFim(@Param("dataInicial") Date dataInicial,
+			@Param("dataFinal") Date dataFinal);
 	
 
 }

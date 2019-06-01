@@ -34,16 +34,20 @@
 				<div class="card-block">
 					<div class="row">
 						<div class="col-md-12">
-							<form class="form-material m-t-5 row"
-								 method="POST">
-								<label>Relatório de doações por período</label> <br /> 
-								
-								<label>Data Início</label> <input required="required" type="date" name="dataInicio"
-									id="dataInicio" class="form-control form-control-line">
-									
-									<label>Data
-									Fim</label> <input required="required" type="date" name="dataFinal"
-									id="dataFinal" class="form-control form-control-line">
+							<form class="form-material m-t-5 row" method="GET" th:action="@{/relatorios/relatorio}">
+								<label>Relatório de doações por período</label> <br /> <label>Data
+									Início</label> <input type="date"
+									name="dataInicio" id="dataInicio"
+									class="form-control form-control-line" /> <label>Data
+									Fim</label> <input type="date" name="dataFinal"
+									id="dataFinal" class="form-control form-control-line" />
+
+								<div class="col-md-12">
+									<button class="btn btn-success">
+										<i class="fas fa-save"></i> Gerar
+									</button>
+
+								</div>
 							</form>
 						</div>
 					</div>
