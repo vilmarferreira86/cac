@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="pt-br"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/material-layout}">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="viewport"
+	content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+<title>Show Doações</title>
+
+</head>
+<body>
+	<section layout:fragment="pagetitle">
+		<div class="row page-titles" style="padding: 0; margin-bottom: 15px;">
+			<div class="col-md-5 col-8 align-self-center">
+				<br>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="javascript:void(0)">DASHBOARD</a></li>
+					<li class="breadcrumb-item ">RELATÓRIOS</li>
+					<li class="breadcrumb-item active">EXIBIR</li>
+				</ol>
+			</div>
+		</div>
+	</section>
+	<section layout:fragment="content">
+		<div class="col-md-10">
+			<div class="card">
+				<div class="card-block">
+					<div class="row">
+						<div class="col-md-12">
+							<form class="form-material m-t-5 row"
+								 method="POST">
+								<label>Relatório de doações por período</label> <br /> 
+								
+								<label>Data Início</label> <input required="required" type="date" name="dataInicio"
+									id="dataInicio" class="form-control form-control-line">
+									
+									<label>Data
+									Fim</label> <input required="required" type="date" name="dataFinal"
+									id="dataFinal" class="form-control form-control-line">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
