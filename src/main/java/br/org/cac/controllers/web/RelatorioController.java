@@ -70,36 +70,7 @@ public class RelatorioController {
 	}
 
 
-/*	@PostMapping("/gerar")
-	public String geraRelatorio(HttpServletResponse response,
-			@RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date _dataInicial,
-			@RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date _dataFinal, Model model) {
-		if (_dataInicial.toString().isEmpty() && !_dataFinal.toString().isEmpty()) {
-			return "relatorios/show";
-		} else {
-			this.dataInicial = _dataInicial;
-			this.dataFinal = _dataFinal;
-			
-			try {
-				JRBeanCollectionDataSource beanCollectionDataSource;
-				List<Doacao> listDoacao = repository.findAllByDataInicioByDataFim(this.dataInicial, this.dataFinal);
-				beanCollectionDataSource = new JRBeanCollectionDataSource(listDoacao);
-				response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-				response.setHeader("Content-Disposition", "inline; filename=doacoes.pdf");
-				JasperPrint jprint = null;
-				
 
-				jprint = JasperFillManager.fillReport(resource.getInputStream(), new HashMap(),
-						beanCollectionDataSource);
-				JasperExportManager.exportReportToPdfStream(jprint, response.getOutputStream());
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-			initList();
-			return "redirect:/relatorios/";
-
-		}
-	}*/
 	
 
 	

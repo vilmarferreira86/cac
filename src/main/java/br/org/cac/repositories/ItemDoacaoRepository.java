@@ -25,8 +25,8 @@ import br.org.cac.models.ItemDoacao;
 public interface ItemDoacaoRepository extends
 		JpaRepository<ItemDoacao, Integer>,
 		JpaSpecificationExecutor<ItemDoacao> {
-
-	List<ItemDoacao> findAllByDoacao(Doacao doacao);
+	@Query("SELECT DISTINCT id FROM ItemDoacao id WHERE id.doacao = :doacao")
+	List<ItemDoacao> findAllByDoacao(@Param("doacao") Doacao doacao);
 
 	List<ItemDoacao> findAllByCampanha(Campanha campanha);
 

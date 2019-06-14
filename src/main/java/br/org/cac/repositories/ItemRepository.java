@@ -1,5 +1,7 @@
 package br.org.cac.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -13,5 +15,7 @@ import br.org.cac.models.Item;
 @Repository
 @RepositoryRestResource(path="item")
 public interface ItemRepository extends JpaRepository<Item, Integer>, JpaSpecificationExecutor<Item> {
+
+	Page<Item> findByNomeOrDescricaoContaining(String busca, String busca2, Pageable nextPageable);
 
 }
